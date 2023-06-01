@@ -1,0 +1,117 @@
+class Solution {
+    
+    class Vertex {
+        int row;
+        int col;
+        int lenSoFar;
+
+        Vertex(int row, int col, int lenSoFar) {
+            this.row = row;
+            this.col = col;
+            this.lenSoFar = lenSoFar;
+        }
+    }
+
+    public boolean isValid(int row, int col, int N, int [][]grid, boolean [][]isSeen) {
+        if ( row >= 0 && row < N 
+        && col >= 0 && col < N
+         && grid[row][col] == 0
+          && isSeen[row][col] == false) {
+              isSeen[row][col] = true;
+              return true;
+          }
+        return false;
+    }
+
+    public void printGrid(int [][]grid, int N) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                System.out.print(grid[i][j]);
+            }
+            System.out.println(',');
+        }
+    }
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        
+        int N = grid[0].length;
+
+        // printGrid(grid, N);
+
+        int len = -1;
+
+        boolean[][] isSeen = new boolean[N][N];
+        Queue<Vertex> adjacentCells = new LinkedList<>();
+
+        if (isValid(0, 0, N, grid, isSeen))
+        {
+            Vertex root = new Vertex(0, 0, 1);
+            adjacentCells.add(root);
+        }
+
+        while (adjacentCells.isEmpty() == false) {
+
+            Vertex currCell = adjacentCells.remove();
+            int row = currCell.row, col = currCell.col;
+
+            // isSeen[row][col] = true;
+
+            // System.out.println(row + " " + col);
+
+            if (row == N - 1 && col == N - 1)
+            {
+                len = currCell.lenSoFar;
+                break;
+            }
+
+            // Vertex downright, downleft, upright, upleft, up, left, right, down;
+            if (isValid(row + 1, col + 1, N, grid, isSeen))
+            {
+                Vertex downright = new Vertex(row + 1, col + 1, currCell.lenSoFar + 1);
+                adjacentCells.add(downright);
+            }
+
+            if (isValid(row + 1, col - 1, N, grid, isSeen))
+            {
+                Vertex downleft = new Vertex(row + 1, col - 1, currCell.lenSoFar + 1);
+                adjacentCells.add(downleft);
+            }
+
+            if (isValid(row - 1, col + 1, N, grid, isSeen))
+            {
+                Vertex upright = new Vertex(row - 1, col + 1, currCell.lenSoFar + 1);
+                adjacentCells.add(upright);
+            }
+
+            if (isValid(row - 1, col - 1, N, grid, isSeen))
+            {
+                Vertex upleft = new Vertex(row - 1, col - 1, currCell.lenSoFar + 1);
+                adjacentCells.add(upleft);
+            }
+
+            if (isValid(row - 1, col, N, grid, isSeen))
+            {
+                Vertex up = new Vertex(row - 1, col, currCell.lenSoFar + 1);
+                adjacentCells.add(up);
+            }
+
+            if (isValid(row, col - 1, N, grid, isSeen))
+            {
+                Vertex left = new Vertex(row, col - 1, currCell.lenSoFar + 1);
+                adjacentCells.add(left);
+            }
+
+            if (isValid(row + 1, col, N, grid, isSeen))
+            {
+                Vertex down = new Vertex(row + 1, col, currCell.lenSoFar + 1);
+                adjacentCells.add(down);
+            }
+
+            if (isValid(row, col + 1, N, grid, isSeen))
+            {
+                Vertex right = new Vertex(row, col + 1, currCell.lenSoFar + 1);
+                adjacentCells.add(right);
+            }
+        }
+        return len;
+    }
+}
